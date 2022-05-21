@@ -10,27 +10,31 @@ from fastapi import FastAPI, Request, HTTPException
 import json
 from base64 import b64encode, b64decode
 
-from scipaper import Paper
-
-from rabbit_body import rabbit_body
 
 import asyncio
 import aiormq
 import os
 import datetime
 
-# exchange_name = os.environ.get("EXCHANGE_NAME")
-# rabbitmq_host = os.environ.get("RABBITMQ_HOST")
-# rabbitmq_user = os.environ.get("RABBITMQ_USER")
-# rabbitmq_password = os.environ.get("RABBITMQ_PASSWORD")
-
-exchange_name = "PUBLISH_PAPER"
-rabbitmq_host = "localhost"
-rabbitmq_user = "guest"
-rabbitmq_password = "guest"
-
+rabbitmq_host = os.environ.get("RABBITMQ_HOST")
+rabbitmq_user = os.environ.get("RABBITMQ_USER")
+rabbitmq_password = os.environ.get("RABBITMQ_PASSWORD")
 
 library = FastAPI()
+
+
+class Section(BaseModel):
+    name: str
+    content: str
+
+
+class Paper(Document):
+    author: str | None = "Paja patak"
+    title: str
+    text: List[Section]
+
+    class Settings:
+        name = "papers"
 
 
 class PublishLog(Document):
@@ -40,11 +44,28 @@ class PublishLog(Document):
     date_published: str | None
 
 
-DATABASE_URL = "mongodb://localhost:27017"
+DATABASE_URL = os.getenv("DATABASE_URI")
 client = motor.motor_asyncio.AsyncIOMotorClient(
     DATABASE_URL, uuidRepresentation="standard"
 )
 db = client["scipub_python"]
+
+
+class rabbit_body:
+    publish_log: dict
+
+    def __init__(self, publish_log):
+        self.publish_log = publish_log
+
+    def encode(self):
+        dicc = {"publish_log": self.publish_log}
+        return b64encode(json.dumps(dicc).encode())
+
+    @staticmethod
+    def decode(encoded):
+        dicc = json.loads(b64decode(encoded))
+        publish_log = dicc["publish_log"]
+        return rabbit_body(publish_log)
 
 
 async def on_message(message):

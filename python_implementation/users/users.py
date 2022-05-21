@@ -1,16 +1,60 @@
-from typing import Optional
+from beanie import init_beanie
+from fastapi import FastAPI, Depends, Request
 
+
+from fastapi_users.db import BeanieBaseUser, BeanieUserDatabase, ObjectIDIDMixin
+
+
+import motor.motor_asyncio
 from beanie import PydanticObjectId
-from fastapi import Depends, Request
-from fastapi_users import BaseUserManager, FastAPIUsers
+import os
+
+from typing import Optional
+from pydantic import Field
+
+
+from fastapi_users import BaseUserManager, FastAPIUsers, schemas
 from fastapi_users.authentication import (
     AuthenticationBackend,
     BearerTransport,
     JWTStrategy,
 )
-from fastapi_users.db import BeanieUserDatabase, ObjectIDIDMixin
 
-from .db import User, get_user_db
+
+DATABASE_URL = os.getenv("DATABASE_URI")
+client = motor.motor_asyncio.AsyncIOMotorClient(
+    DATABASE_URL, uuidRepresentation="standard"
+)
+db = client["scipub_python"]
+
+
+class User(BeanieBaseUser[PydanticObjectId]):
+    first_name: str = Field()
+    last_name: str = Field()
+    pass
+
+
+async def get_user_db():
+    yield BeanieUserDatabase(User)
+
+
+class UserRead(schemas.BaseUser[PydanticObjectId]):
+    first_name: str
+    last_name: str
+    pass
+
+
+class UserCreate(schemas.BaseUserCreate):
+    first_name: str
+    last_name: str
+    pass
+
+
+class UserUpdate(schemas.BaseUserUpdate):
+    first_name: Optional[str]
+    last_name: Optional[str]
+    pass
+
 
 SECRET = "SECRET"
 
@@ -43,3 +87,30 @@ auth_backend = AuthenticationBackend(
 fastapi_users = FastAPIUsers[User, PydanticObjectId](get_user_manager, [auth_backend])
 
 current_active_user = fastapi_users.current_user(active=True)
+
+
+users = FastAPI()
+
+users.include_router(
+    fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
+)
+users.include_router(
+    fastapi_users.get_register_router(UserRead, UserCreate),
+    prefix="/auth",
+    tags=["auth"],
+)
+users.include_router(
+    fastapi_users.get_users_router(UserRead, UserUpdate),
+    prefix="/users",
+    tags=["users"],
+)
+
+
+@users.on_event("startup")
+async def on_startup():
+    await init_beanie(
+        database=db,
+        document_models=[
+            User,
+        ],
+    )

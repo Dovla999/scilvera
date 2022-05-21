@@ -1,0 +1,66 @@
+version: '1.0'
+
+services:
+
+  users_service:
+    build: ./users
+    command: uvicorn app.users:users --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./users/:/app
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URI=mongodb://mongo_username:mongo_password@mongodb
+    depends_on:
+      - rabbitmq
+      - mongodb
+  scipaper_service:
+    build: ./scipaper
+    command: uvicorn app.scipaper:scipaper --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./scipaper/:/app
+    ports:
+      - "8002:8000"
+    restart: on-failure
+    environment:
+      - DATABASE_URI=mongodb://mongo_username:mongo_password@mongodb
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    depends_on:
+      - rabbitmq
+      - mongodb
+
+  library_service:
+    build: ./library
+    command: uvicorn app.library:library --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./library/:/app
+    ports:
+      - "8003:8000"
+    restart: on-failure
+    environment:
+      - DATABASE_URI=mongodb://mongo_username:mongo_password@mongodb
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    depends_on:
+      - rabbitmq
+      - mongodb
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo_username
+      - MONGO_INITDB_ROOT_PASSWORD=mongo_password
