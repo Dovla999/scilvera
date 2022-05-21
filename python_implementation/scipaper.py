@@ -8,6 +8,11 @@ from beanie import Document, Indexed, init_beanie
 
 from fastapi import FastAPI, Request, HTTPException
 
+import json
+from base64 import b64encode, b64decode
+
+from rabbit_body import rabbit_body
+
 import asyncio
 import aiormq
 import os
@@ -17,7 +22,7 @@ import os
 # rabbitmq_user = os.environ.get("RABBITMQ_USER")
 # rabbitmq_password = os.environ.get("RABBITMQ_PASSWORD")
 
-exchange_name = "PUBLISH_PAPER"
+exchange_name = "publish"
 rabbitmq_host = "localhost"
 rabbitmq_user = "guest"
 rabbitmq_password = "guest"
@@ -56,7 +61,7 @@ scipaper = FastAPI()
 
 
 async def push_to_rabbit(id: str, title: str, author: str):
-    request = {"message": {"id": id, "title": title, "author": author}}
+    request = rabbit_body({"id": id, "title": title, "author": author})
 
     connection = await aiormq.connect(
         "amqp://{}:{}@{}/".format(rabbitmq_user, rabbitmq_password, rabbitmq_host)
@@ -64,10 +69,8 @@ async def push_to_rabbit(id: str, title: str, author: str):
 
     channel = await connection.channel()
 
-    await channel.exchange_declare(exchange=exchange_name, exchange_type="direct")
-
     await channel.basic_publish(
-        request,
+        request.encode(),
         routing_key="publish",
     )
 
@@ -90,6 +93,11 @@ async def publish_paper(id: str):
         raise HTTPException(status_code=404, detail="Paper with that id not found")
     await push_to_rabbit(id, paper.title, paper.author)
     return paper
+
+
+@scipaper.get("/")
+async def get_all():
+    return [paper for paper in await Paper.find({}).to_list()]
 
 
 @scipaper.on_event("startup")
