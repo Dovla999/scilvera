@@ -92,7 +92,7 @@ async def push_to_rabbit(id: str, title: str, author: str):
 @scipaper.post("/api/v1/paper")
 async def create_paper(paper: PaperSchema, request: Request):
     response = requests.get(
-        f"http://python_implementation-users_service-1:8000/users/me",
+        f"http://users_service:8000/api/v1/users/me",
         headers=request.headers,
     )
     if response.status_code != 200:
@@ -103,7 +103,13 @@ async def create_paper(paper: PaperSchema, request: Request):
 
 
 @scipaper.get("/api/v1/paper/{id}")
-async def publish_paper(id: str):
+async def publish_paper(id: str, request: Request):
+    response = requests.get(
+        f"http://users_service:8000/api/v1/users/me",
+        headers=request.headers,
+    )
+    if response.status_code != 200:
+        raise HTTPException(status_code=403, detail="Unauthorized")
     try:
         paper = await Paper.get(id)
     except BaseException:
