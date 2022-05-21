@@ -89,19 +89,21 @@ fastapi_users = FastAPIUsers[User, PydanticObjectId](get_user_manager, [auth_bac
 current_active_user = fastapi_users.current_user(active=True)
 
 
-users = FastAPI()
+users = FastAPI(openapi_url="/api/v1/users/openapi.json", docs_url="/api/v1/users/docs")
 
 users.include_router(
-    fastapi_users.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
+    fastapi_users.get_auth_router(auth_backend),
+    prefix="/api/v1/auth/jwt",
+    tags=["auth"],
 )
 users.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/auth",
+    prefix="/api/v1/auth",
     tags=["auth"],
 )
 users.include_router(
     fastapi_users.get_users_router(UserRead, UserUpdate),
-    prefix="/users",
+    prefix="/api/v1/users",
     tags=["users"],
 )
 

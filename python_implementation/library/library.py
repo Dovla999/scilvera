@@ -20,7 +20,9 @@ rabbitmq_host = os.environ.get("RABBITMQ_HOST")
 rabbitmq_user = os.environ.get("RABBITMQ_USER")
 rabbitmq_password = os.environ.get("RABBITMQ_PASSWORD")
 
-library = FastAPI()
+library = FastAPI(
+    openapi_url="/api/v1/library/openapi.json", docs_url="/api/v1/library/docs"
+)
 
 
 class Section(BaseModel):
@@ -89,7 +91,7 @@ async def consume(loop):
     consume_ok = await channel.basic_consume(declare_ok.queue, on_message, no_ack=True)
 
 
-@library.get("/publishings")
+@library.get("/api/v1/library/publishings")
 async def get_all_published_papers():
     return [
         publish_log

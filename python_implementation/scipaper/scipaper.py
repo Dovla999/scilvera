@@ -68,7 +68,10 @@ class PaperSchema(BaseModel):
 
 from fastapi import FastAPI
 
-scipaper = FastAPI()
+
+scipaper = FastAPI(
+    openapi_url="/api/v1/paper/openapi.json", docs_url="/api/v1/paper/docs"
+)
 
 
 async def push_to_rabbit(id: str, title: str, author: str):
@@ -86,7 +89,7 @@ async def push_to_rabbit(id: str, title: str, author: str):
     )
 
 
-@scipaper.post("/paper")
+@scipaper.post("/api/v1/paper")
 async def create_paper(paper: PaperSchema, request: Request):
     response = requests.get(
         f"http://python_implementation-users_service-1:8000/users/me",
@@ -99,7 +102,7 @@ async def create_paper(paper: PaperSchema, request: Request):
     return re
 
 
-@scipaper.get("/{id}")
+@scipaper.get("/api/v1/paper/{id}")
 async def publish_paper(id: str):
     try:
         paper = await Paper.get(id)
