@@ -1,0 +1,19 @@
+
+msg-pool {
+
+    group PaperMsgGroup [
+
+        msg PaperPublished [
+            str paperId
+            str title
+            str author
+        ]
+
+    ]
+}
+
+msg-broker Broker {
+
+    channel EV_PAPER_PUBLISHED_CHANNEL(PaperMsgGroup.PaperPublished)
+
+}

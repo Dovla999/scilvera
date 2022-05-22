@@ -1,0 +1,25 @@
+import "setup.si"
+import "user.si"
+
+
+service Scipaper {
+    service_registry=ServiceRegistry
+
+    api { 
+        typedef Paper [
+            @id int id
+            @required str author
+            str title
+            list<Section> sections
+        ]
+
+        typedef Section [
+            str name
+            str content
+        ]
+
+        @rest(method=GET)
+        @producer(PaperMsgGroup.PaperPublished -> Broker.EV_PAPER_PUBLISHED_CHANNEL)
+        Paper publishPaper(int id)
+    }
+}

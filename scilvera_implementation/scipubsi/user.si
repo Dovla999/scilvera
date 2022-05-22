@@ -1,0 +1,20 @@
+import "setup.si"
+
+service User{
+    service_registry=ServiceRegistry
+
+    api {
+
+        @crud
+        typedef User [
+            @id str username
+            @required str password
+            str email
+            @required str firstname
+            @required str lastname
+        ]
+
+        @rest(method=GET)
+        bool userExists(str username)
+    }
+}

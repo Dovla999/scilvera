@@ -1,0 +1,23 @@
+import "setup.si"
+import "scipaper.si"
+
+service Library {
+    service_registry=ServiceRegistry
+
+    api { 
+        typedef PublishLog [
+            str author
+            str title
+            int paperId
+        ]
+
+        @rest(method=GET)
+        list<PublishLog> listPublishLogs()
+
+        internal {
+            @consumer(PaperMsgGroup.PaperPublished <- Broker.EV_PAPER_PUBLISHED_CHANNEL)
+            void paperPublished()
+        }
+
+    }    
+}
