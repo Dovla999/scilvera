@@ -27,7 +27,6 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 
     private UserDetailsService userDetailsService;
 
-    protected final Log LOGGER = LogFactory.getLog(getClass());
     private final TokenUtils jwtTokenUtils;
 
     public TokenAuthenticationFilter(AuthenticationManager authManager, TokenUtils tokenUtils) {

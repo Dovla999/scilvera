@@ -5,7 +5,8 @@ import "user.si"
 service Scipaper {
     service_registry=ServiceRegistry
 
-    api { 
+    api {
+        @crud 
         typedef Paper [
             @id int id
             @required str author
@@ -21,5 +22,7 @@ service Scipaper {
         @rest(method=GET)
         @producer(PaperMsgGroup.PaperPublished -> Broker.EV_PAPER_PUBLISHED_CHANNEL)
         Paper publishPaper(int id)
+
+        
     }
 }

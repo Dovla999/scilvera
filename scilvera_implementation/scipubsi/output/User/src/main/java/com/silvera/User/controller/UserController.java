@@ -8,6 +8,8 @@
 package com.silvera.User.controller;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.silvera.User.dto.UserLoginDTO;
 import com.silvera.User.dto.UserTokenState;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -46,11 +49,15 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+
+    public static Map<String, String> TokenUsernameMap = new HashMap<>();
+
     @Autowired
     UserService userService;
     
     @RequestMapping(value="/user", method=RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("permitAll()")
     public User createUser(@Valid @RequestBody User user){
         return userService.createUser(user);
     }
@@ -77,28 +84,37 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/api/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/user/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserTokenState> loginUser(@RequestBody UserLoginDTO userLoginDTO){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDTO.getUsername(), userLoginDTO.getPassword()));
-
-        // Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
-        // kontekst
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        User user = (User) authentication.getPrincipal();
+        User user = userService.readUser(userLoginDTO.getUsername());
         String jwt = tokenUtils.generateToken(user.getUsername());
         int expiresIn = tokenUtils.getExpiredIn();
+        TokenUsernameMap.put(jwt, user.getUsername());
         return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
     }
 
+
+    @RequestMapping(value="/user/me", method = RequestMethod.GET)
+    public ResponseEntity<String> getMe(@RequestHeader("Authorization") String authHeader){
+       try {
+           String username = TokenUsernameMap.get(authHeader.replace("Bearer ", "").strip());
+           return ResponseEntity.ok().body(username);
+       }
+       catch (Exception e){
+           return ResponseEntity.badRequest().body("No user");
+       }
+    }
 
     
         
     
 
-    @GetMapping(value="userexists/{username}")
+    @GetMapping(value="/userexists/{username}")
 
-
+    @PreAuthorize("permitAll()")
     @ResponseBody
     public java.lang.Boolean userExists(@PathVariable java.lang.String username) {
         

@@ -7,9 +7,18 @@
 
 package com.silvera.Scipaper.controller;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,26 +42,67 @@ public class ScipaperController {
     IScipaperService scipaperService;
 
     // Auto-generated CRUD methods
-    
+
+
+
+    @RequestMapping(value="/paper", method=RequestMethod.POST)
+    @ResponseBody
+    public Paper createPaper(@Valid @RequestBody Paper paper,  @RequestHeader("Authorization") String authHeader) throws IOException, InterruptedException {
+        var client = HttpClient.newHttpClient();
+
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:9095/api/u/user/me"))
+                .header("Authorization", authHeader)
+                .build();
+        var response =client.send(request, HttpResponse.BodyHandlers.ofString() );
+
+        if (response.statusCode() != 200){
+            return null;
+        }
+        String username = response.body();
+        paper.setAuthor(username);
+
+        return scipaperService.createPaper(paper);
+    }
+
+
 
     //
     // Public functions
     //
-    
-    
+
+
 
     @GetMapping(value="publishpaper/{id}")
-
-
-    public Paper publishPaper(@PathVariable java.lang.Integer id){
-        
-        return scipaperService.publishPaper(id);
-
-    }
-    
 
     //
     // Message consumers
     //
-    
+
+
+    public Paper publishPaper(@PathVariable java.lang.Integer id, @RequestHeader("Authorization") String authHeader) throws IOException, InterruptedException {
+
+        var client = HttpClient.newHttpClient();
+
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:9095/api/u/user/me"))
+                .header("Authorization", authHeader)
+                .build();
+        var response =client.send(request, HttpResponse.BodyHandlers.ofString() );
+
+        if (response.statusCode() != 200){
+            return null;
+        }
+
+        String username = response.body();
+
+        return scipaperService.publishPaper(id, username);
+
+    }
+
+
+    //
+    // Message consumers
+    //
+
 }

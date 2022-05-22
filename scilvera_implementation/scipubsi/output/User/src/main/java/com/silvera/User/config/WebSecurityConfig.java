@@ -27,15 +27,12 @@ public class WebSecurityConfig {
         http
                 // disable CSRF as we do not serve browser clients
                 .csrf().disable()
-                // match GraphQL endpoint
-                .antMatcher("/graphql")
+
                 // add JWT authorization filter
                 .addFilter(new TokenAuthenticationFilter(new CustomAuthenticationManager(), jwtTokenUtils))
 
                 // allow access restriction using request matcher
                 .authorizeRequests()
-                // authenticate requests to GraphQL endpoint
-                .antMatchers("/graphql").authenticated()
                 // allow all other requests
                 .anyRequest().permitAll().and()
                 // make sure we use stateless session, session will not be used to store user's state

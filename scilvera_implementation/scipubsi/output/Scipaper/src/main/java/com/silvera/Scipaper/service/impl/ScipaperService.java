@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.silvera.Scipaper.domain.model.*;
 import com.silvera.Scipaper.service.base.*;
 import com.silvera.Scipaper.repository.*;
-import com.silvera.Scipaper.messages.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 
@@ -24,31 +23,47 @@ public class ScipaperService implements IScipaperService {
     
 
     
+    @Autowired
+    PaperRepository paperRepository;
 
     @Autowired
     KafkaTemplate<String, com.silvera.Scipaper.messages.papermsggroup.PaperPublished> papermsggroupPaperPublishedKafkaTemplate;
     
 
     // Auto-generated CRUD methods
-    
 
 
-    
     @Override
-    public Paper publishPaper(java.lang.Integer id){
-        /*
-            TODO: Implement this function!!!
-        */
-        // Uncomment to publish the message
-        //com.silvera.Scipaper.messages.papermsggroup.PaperPublished msg = new com.silvera.Scipaper.messages.papermsggroup.PaperPublished();
-        // Here set values to the message attributes:
-        // ------------------------------------------
+    public Paper createPaper(Paper paper) {
+        return paperRepository.save(paper);
+    }
 
-        // ------------------------------------------
-        //papermsggroupPaperPublishedKafkaTemplate.send("EV_PAPER_PUBLISHED_CHANNEL", msg);
-        
+    @Override
+    public Paper updatePaper(Integer id, Paper paperUpdate) {
+        return null;
+    }
 
-        throw new java.lang.UnsupportedOperationException("Not implemented yet.");
+    @Override
+    public Optional<Paper> readPaper(Integer id) {
+        return paperRepository.findById(id);
+    }
+
+    @Override
+    public void deletePaper(Integer id) {
+
+    }
+
+    @Override
+    public Paper publishPaper(java.lang.Integer id, String username){
+        com.silvera.Scipaper.messages.papermsggroup.PaperPublished msg = new com.silvera.Scipaper.messages.papermsggroup.PaperPublished();
+
+        msg.setPaperId(String.valueOf(id));
+        msg.setAuthor(username);
+        var paper = readPaper(id);
+        paper.ifPresent(value -> msg.setTitle(value.getTitle()));
+
+        papermsggroupPaperPublishedKafkaTemplate.send("EV_PAPER_PUBLISHED_CHANNEL", msg);
+        return  paper.get();
     }
     
 

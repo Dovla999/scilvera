@@ -19,15 +19,10 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     @Autowired
     private UserService customUserDetailsService;
 
-    @Bean
-    protected PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         final UserDetails userDetail = customUserDetailsService.readUser(authentication.getName());
-        if (!passwordEncoder().matches(authentication.getCredentials().toString(), userDetail.getPassword())) {
+        if (!authentication.getCredentials().toString().equals(userDetail.getPassword())) {
             throw new BadCredentialsException("Wrong password");
         }
         return new UsernamePasswordAuthenticationToken(userDetail.getUsername(), userDetail.getPassword(), userDetail.getAuthorities());

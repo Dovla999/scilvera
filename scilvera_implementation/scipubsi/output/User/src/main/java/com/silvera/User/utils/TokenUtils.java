@@ -44,6 +44,7 @@ public class TokenUtils {
         return Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(username)
+                .claim("username", username)
                 .setAudience(generateAudience())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
@@ -80,6 +81,7 @@ public class TokenUtils {
 
         try {
             final Claims claims = this.getAllClaimsFromToken(token);
+            claims.get("username");
             username = claims.getSubject();
         } catch (ExpiredJwtException ex) {
             throw ex;

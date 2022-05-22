@@ -5,10 +5,10 @@
     Date: 2022-05-22 12:12:03
 */
 
-package com.silvera.Scipaper.domain.model;
+package com.silvera.Library.domain.model;
 
 import org.springframework.data.annotation.Id;
-import javax.validation.constraints.*;
+
 public class Section {
 
     
@@ -16,25 +16,25 @@ public class Section {
     private String id;
     
     
-    private java.lang.String name;
+    private String name;
     
-    private java.lang.String content;
+    private String content;
 
 
     
-    public java.lang.String getName() {
+    public String getName() {
         return this.name;
     }
 
-    public void setName(java.lang.String name) {
+    public void setName(String name) {
         this.name = name;
     }
     
-    public java.lang.String getContent() {
+    public String getContent() {
         return this.content;
     }
 
-    public void setContent(java.lang.String content) {
+    public void setContent(String content) {
         this.content = content;
     }
     

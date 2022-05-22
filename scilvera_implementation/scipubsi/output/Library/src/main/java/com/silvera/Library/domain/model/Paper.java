@@ -5,10 +5,12 @@
     Date: 2022-05-22 12:12:03
 */
 
-package com.silvera.Scipaper.domain.model;
+package com.silvera.Library.domain.model;
 
 import org.springframework.data.annotation.Id;
-import javax.validation.constraints.*;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 public class Paper {
 
     
@@ -17,39 +19,39 @@ public class Paper {
     @Id
     
     @NotNull(message="Field 'id' is mandatory!")
-    private java.lang.Integer id;
+    private Integer id;
     
     
     @NotBlank(message="Field 'author' cannot be empty!")
-    private java.lang.String author;
+    private String author;
     
-    private java.lang.String title;
+    private String title;
     
     private java.util.List<Section> sections= java.util.Collections.emptyList();
 
 
     
-    public java.lang.Integer getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(java.lang.Integer id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     
-    public java.lang.String getAuthor() {
+    public String getAuthor() {
         return this.author;
     }
 
-    public void setAuthor(java.lang.String author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
     
-    public java.lang.String getTitle() {
+    public String getTitle() {
         return this.title;
     }
 
-    public void setTitle(java.lang.String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
     

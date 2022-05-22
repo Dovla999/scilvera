@@ -25,21 +25,21 @@ public class LibraryService implements ILibraryService {
 
     
 
-    
-
+    @Autowired
+    PublishLogRepository publishLogRepository;
     // Auto-generated CRUD methods
+
+    @Autowired
+    PaperRepository paperRepository;
     
 
 
     
     @Override
     public java.util.List<PublishLog> listPublishLogs(){
-        /*
-            TODO: Implement this function!!!
-        */
-        
+        return publishLogRepository.findAll();
 
-        throw new java.lang.UnsupportedOperationException("Not implemented yet.");
+
     }
     
 
@@ -47,13 +47,13 @@ public class LibraryService implements ILibraryService {
     
     @Override
     public void paperPublished(com.silvera.Library.messages.papermsggroup.PaperPublished message){
-        /*
-            TODO: Implement this function!!!
-        */
+        PublishLog publishLog = new PublishLog();
+        publishLog.setPaperId(Integer.valueOf(message.getPaperId()));
+        publishLog.setAuthor(message.getAuthor());
+        publishLog.setTitle(message.getTitle());
 
-        
+        publishLogRepository.save(publishLog);
 
-        throw new java.lang.UnsupportedOperationException("Not implemented yet.");
     }
     
     
