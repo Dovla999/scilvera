@@ -1,0 +1,264 @@
+{
+	"info": {
+		"_postman_id": "9743fe2a-66f0-4536-b649-a2b9f80c28e3",
+		"name": "SilveraJava",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:9095/api/u/user/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6InNvbWV1c2VybmFtZSIsImF1ZCI6IndlYiIsImlhdCI6MTY1MzIxMTYwMSwiZXhwIjoxNjUzMjEzNDAxfQ.SpmJZ0Frqjf1pMypOvjXWyVqa7l4mUBlPN7E5EJf5mWenV7RIfWdlwE4CdvX2j--9kBRlwnEfrN3XLBFnQo95w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"username\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9095/api/u/user/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9095",
+					"path": [
+						"api",
+						"u",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9095/api/l/listpublishlogs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9095/api/l/listpublishlogs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9095",
+					"path": [
+						"api",
+						"l",
+						"listpublishlogs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9095/api/s/publishpaper/1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6InVzZXJuYW1lIiwidXNlcm5hbWUiOiJ1c2VybmFtZSIsImF1ZCI6IndlYiIsImlhdCI6MTY1MzIxNjY3NSwiZXhwIjoxNjUzMjE4NDc1fQ.hBdVaiyoCODreFgJMN1E6p0atk4Y_4UlCsTQn-0JKvTh9EpN-aZXCYizQt6BwlIzXAWiQKHhRtjOzj2d697B8w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"1\",\n    \"title\": \"sometitle\",\n    \"author\": \"whatever\",\n    \"sections\": [\n        {\n            \"id\": \"lalasection1\",\n            \"name\": \"firstsection\",\n            \"content\": \"randomunneededcontent\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9095/api/s/publishpaper/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9095",
+					"path": [
+						"api",
+						"s",
+						"publishpaper",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9095/api/s/publishpaper/1",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6InVzZXJuYW1lIiwidXNlcm5hbWUiOiJ1c2VybmFtZSIsImF1ZCI6IndlYiIsImlhdCI6MTY1MzIxNjY3NSwiZXhwIjoxNjUzMjE4NDc1fQ.hBdVaiyoCODreFgJMN1E6p0atk4Y_4UlCsTQn-0JKvTh9EpN-aZXCYizQt6BwlIzXAWiQKHhRtjOzj2d697B8w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"1\",\n    \"title\": \"sometitle\",\n    \"author\": \"whatever\",\n    \"sections\": [\n        {\n            \"id\": \"lalasection1\",\n            \"name\": \"firstsection\",\n            \"content\": \"randomunneededcontent\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9095/api/s/publishpaper/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9095",
+					"path": [
+						"api",
+						"s",
+						"publishpaper",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9095/api/u/s/publishpaper/1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6InVzZXJuYW1lIiwidXNlcm5hbWUiOiJ1c2VybmFtZSIsImF1ZCI6IndlYiIsImlhdCI6MTY1MzIxNjY3NSwiZXhwIjoxNjUzMjE4NDc1fQ.hBdVaiyoCODreFgJMN1E6p0atk4Y_4UlCsTQn-0JKvTh9EpN-aZXCYizQt6BwlIzXAWiQKHhRtjOzj2d697B8w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9095/api/u/s/publishpaper/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9095",
+					"path": [
+						"api",
+						"u",
+						"s",
+						"publishpaper",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9095/api/u/user/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"username\",\n    \"password\": \"password\",\n    \"email\": \"email\",\n    \"firstname\": \"firstname\",\n    \"lastname\": \"la\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9095/api/u/user/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9095",
+					"path": [
+						"api",
+						"u",
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9095/api/u/user/me",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJzcHJpbmctc2VjdXJpdHktZXhhbXBsZSIsInN1YiI6InVzZXJuYW1lIiwidXNlcm5hbWUiOiJ1c2VybmFtZSIsImF1ZCI6IndlYiIsImlhdCI6MTY1MzIxNjY3NSwiZXhwIjoxNjUzMjE4NDc1fQ.hBdVaiyoCODreFgJMN1E6p0atk4Y_4UlCsTQn-0JKvTh9EpN-aZXCYizQt6BwlIzXAWiQKHhRtjOzj2d697B8w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9095/api/u/user/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9095",
+					"path": [
+						"api",
+						"u",
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
