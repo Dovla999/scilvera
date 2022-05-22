@@ -70,7 +70,14 @@ public class ScipaperController {
     //
     // Public functions
     //
+    @GetMapping(value="papers")
 
+
+    public java.util.List<Paper> papers(){
+
+        return scipaperService.papers();
+
+    }
 
 
     @GetMapping(value="publishpaper/{id}")

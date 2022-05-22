@@ -28,9 +28,9 @@ public interface IScipaperService {
     
     
     public void deletePaper(java.lang.Integer id);
-    
-    
 
+
+    public java.util.List<Paper> papers();
     
     public Paper publishPaper(java.lang.Integer id, String username);
     

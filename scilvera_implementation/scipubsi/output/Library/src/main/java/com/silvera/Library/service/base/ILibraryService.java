@@ -7,6 +7,7 @@
 
 package com.silvera.Library.service.base;
 
+import com.silvera.Library.dto.PublishLogWithPaperDto;
 import org.springframework.stereotype.Service;
 import com.silvera.Library.domain.model.*;
 import com.silvera.Library.messages.*;
@@ -19,7 +20,7 @@ public interface ILibraryService {
     
 
     
-    public java.util.List<PublishLog> listPublishLogs();
+    public java.util.List<PublishLogWithPaperDto> listPublishLogs();
     
 
     

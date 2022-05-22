@@ -53,6 +53,13 @@ public class ScipaperService implements IScipaperService {
 
     }
 
+
+    @Override
+    public java.util.List<Paper> papers(){
+        return paperRepository.findAll();
+    }
+
+
     @Override
     public Paper publishPaper(java.lang.Integer id, String username){
         com.silvera.Scipaper.messages.papermsggroup.PaperPublished msg = new com.silvera.Scipaper.messages.papermsggroup.PaperPublished();
